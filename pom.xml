@@ -20,7 +20,6 @@
 
     <modules>
         <module>tower-deploy-ms</module>
-        <module>tower-deploy-site</module>
     </modules>
 
     <properties>

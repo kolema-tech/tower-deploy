@@ -36,6 +36,6 @@ public class Response {
     }
 
     public static Response success() {
-        return new Response(0, "");
+        return new Response(20000, "");
     }
 }

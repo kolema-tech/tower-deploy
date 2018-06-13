@@ -62,7 +62,7 @@ public class MsController {
     @ApiOperation(value = "查詢微服務")
     @GetMapping(value = "/")
     public Response getAll() {
-        return new Response(0, "查詢成功", msService.getAll());
+        return new Response(20000, "查詢成功", msService.getAll());
     }
 
     @ApiOperation(value = "上傳包")
