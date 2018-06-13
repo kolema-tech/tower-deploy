@@ -6,3 +6,19 @@ export function getAllList() {
     method: 'get'
   })
 }
+
+export function add(params) {
+  return request2({
+    url: '/api/ms/',
+    method: 'post',
+    data: params
+  })
+}
+
+export function upload(ms, params) {
+  return request2({
+    url: '/api/ms/upload/' + ms,
+    method: 'post',
+    data: params
+  })
+}

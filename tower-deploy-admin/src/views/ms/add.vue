@@ -1,43 +1,41 @@
 <template>
   <div class="app-container">
-
     <el-form ref="form" :model="form" label-width="120px">
-
       <el-form-item label="服務名稱">
         <el-input v-model="form.name"></el-input>
       </el-form-item>
-      <el-form-item label="提交信息">
-        <el-input v-model="form.commitMessage"></el-input>
+      <el-form-item label="Git地址">
+        <el-input v-model="form.gitUrl"></el-input>
+      </el-form-item>
+      <el-form-item label="配置">
+        <el-input type="textarea" v-model="form.configs"></el-input>
       </el-form-item>
 
-      <el-form-item label="文件">
-        <el-input type="file" v-model="form.file"></el-input>
+      <el-form-item>
+        <el-button type="primary" @click="onSubmit">Create</el-button>
+        <el-button @click="onCancel">Cancel</el-button>
       </el-form-item>
     </el-form>
-
-    <el-button type="primary" @click="onSubmit">上傳</el-button>
-    <el-button @click="onCancel">取消</el-button>
   </div>
 </template>
 
 <script>
-  import {upload} from '@/api/ms'
+  import {add} from '@/api/ms'
 
   export default {
     data() {
       return {
-        fileList: [],
         form: {
           name: '',
-          commitMessage: '',
-          file: null
+          gitUrl: '',
+          configs: {}
         }
       }
     },
     methods: {
       onSubmit() {
         this.$message('submit!')
-        upload(this.form.name, this.form).then(response => {
+        add(this.form).then(response => {
           this.list = response.data
           this.listLoading = false
           if (response.code == 20000) {
