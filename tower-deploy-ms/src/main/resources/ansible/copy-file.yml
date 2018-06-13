@@ -1,0 +1,8 @@
+---
+- name: copy file
+  hosts: controller_server
+  sudo: yes
+  any_errors_fatal: True
+  serial: 1
+  roles:
+    - copy-file

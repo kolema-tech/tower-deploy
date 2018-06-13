@@ -1,0 +1,8 @@
+---
+- name: make sure the curl.
+  yum: name=curl state=present
+- name: post.
+  uri:
+    url: "{{ eureka_url }}/eureka/apps/{{ ms }}/{{ instance_id }}/status?value=OUT_OF_SERVICE"
+    method: PUT
+    status_code: 200

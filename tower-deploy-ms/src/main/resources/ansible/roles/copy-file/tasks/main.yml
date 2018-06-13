@@ -1,0 +1,6 @@
+---
+- name: copy to dest
+  copy:
+    src: "{{ src_file }}"
+    backup: yes
+    dest: "{{ dest_file }}"

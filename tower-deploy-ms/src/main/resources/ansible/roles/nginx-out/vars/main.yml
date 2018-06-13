@@ -1,0 +1,5 @@
+ms: some-ms
+upstream_dir: /usr/local/nginx/conf/vhost/upstream
+upstreams:
+ - 172.11.22.44:18881 weight=10
+ - 172.11.33.44:18881 weight=10

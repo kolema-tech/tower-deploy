@@ -1,0 +1,5 @@
+upstream {{ ms }} {
+{% for upstream in upstreams %}
+        server {{ upstream }};
+{% endfor %}
+}

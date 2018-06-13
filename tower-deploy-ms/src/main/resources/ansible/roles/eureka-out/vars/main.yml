@@ -1,0 +1,3 @@
+ms: some-ms
+eureka_url: http://172.18.23.23:20001
+instance_id: 172.18.11.111:8080

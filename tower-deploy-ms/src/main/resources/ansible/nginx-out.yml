@@ -1,0 +1,8 @@
+---
+- name: deploy nginx
+  hosts: nginx_server
+  sudo: yes
+  any_errors_fatal: True
+  serial: 1
+  roles:
+    - nginx-out

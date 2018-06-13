@@ -1,0 +1,10 @@
+---
+- name: backup nginx config
+  shell: cp {{ upstream_dir }}/{{ ms }}.conf {{ upstream_dir }}/{{ ms }}.conf.bak -f
+- name: modify config
+  template: src=port_80.conf.j2 dest={{ upstream_dir }}/{{ ms }}.conf force=yes
+- name: test config & restart
+  shell: nginx -t
+  notify : restart nginx
+- name: pause for 2s
+  pause: seconds=2
