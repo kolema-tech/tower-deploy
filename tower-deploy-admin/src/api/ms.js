@@ -14,11 +14,3 @@ export function add(params) {
     data: params
   })
 }
-
-export function upload(ms, params) {
-  return request2({
-    url: '/api/ms/upload/' + ms,
-    method: 'post',
-    data: params
-  })
-}
