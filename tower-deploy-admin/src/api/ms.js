@@ -14,3 +14,11 @@ export function add(params) {
     data: params
   })
 }
+
+export function edit(params) {
+  return request2({
+    url: '/api/ms/',
+    method: 'put',
+    data: params
+  })
+}

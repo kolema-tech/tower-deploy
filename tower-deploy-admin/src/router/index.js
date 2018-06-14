@@ -58,6 +58,13 @@ export const constantRouterMap = [
         meta: {title: '服務創建', icon: 'create'}
       },
       {
+        path: 'msEdit',
+        name: 'msEdit',
+        hidden: true,
+        component: () => import('@/views/ms/edit'),
+        meta: {title: '服務編輯', icon: 'edit'}
+      },
+      {
         path: 'msUpload',
         name: 'msUpload',
         hidden: true,

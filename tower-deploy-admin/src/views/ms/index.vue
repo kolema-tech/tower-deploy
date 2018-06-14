@@ -8,19 +8,30 @@
           {{scope.$index}}
         </template>
       </el-table-column>
-      <el-table-column label="服務名稱">
+      <el-table-column label="服務名稱" width="100">
         <template slot-scope="scope">
           {{scope.row.name}}
         </template>
       </el-table-column>
-      <el-table-column label="git地址" width="110" align="center">
+      <el-table-column label="git地址">
         <template slot-scope="scope">
-          <span>{{scope.row.gitUrl}}</span>
+          <a :href="scope.row.gitUrl" target="_blank">{{scope.row.gitUrl}}</a>
         </template>
       </el-table-column>
-      <el-table-column label="配置" width="110" align="center">
+      <el-table-column label="配置" width="210" align="center">
         <template slot-scope="scope">
           {{scope.row.configs}}
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="160">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button
+            size="mini"
+            type="danger"
+            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -38,14 +49,6 @@
       }
     },
     filters: {
-      statusFilter(status) {
-        const statusMap = {
-          published: 'success',
-          draft: 'gray',
-          deleted: 'danger'
-        }
-        return statusMap[status]
-      }
     },
     created() {
       this.fetchData()
@@ -60,6 +63,31 @@
       },
       goto(page) {
         this.$router.push(page);
+      },
+      handleEdit(index, row) {
+        console.log(index, row);
+        this.$router.push({ name: 'msEdit', params: row});
+      },
+      handleDelete(index, row) {
+        console.log(index, row);
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+
+          //TODO: add.
+
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
       }
     }
   }

@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form ref="form" :model="form" label-width="120px">
       <el-form-item label="服務名稱">
-        <el-input v-model="form.name"></el-input>
+        <el-input v-model="form.name" :readonly="true"></el-input>
       </el-form-item>
       <el-form-item label="Git地址">
         <el-input v-model="form.gitUrl"></el-input>
@@ -12,7 +12,7 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">創建</el-button>
+        <el-button type="primary" @click="onSubmit">修改</el-button>
         <el-button @click="onCancel">取消</el-button>
       </el-form-item>
     </el-form>
@@ -20,9 +20,14 @@
 </template>
 
 <script>
-  import {add} from '@/api/ms'
+  import {edit} from '@/api/ms'
 
   export default {
+
+    created: function () {
+      this.form = this.$route.params;
+    },
+
     data() {
       return {
         form: {
@@ -34,11 +39,12 @@
     },
     methods: {
       onSubmit() {
-        this.$message('submit!')
-        add(this.form).then(response => {
+        this.$message('submit!');
+        this.form.configs = null;
+        edit(this.form).then(response => {
           this.list = response.data
           if (response.code == 20000) {
-            this.$message('創建成功!');
+            this.$message('修改成功!');
             this.$router.push('ms');
           }
         })
@@ -49,10 +55,3 @@
     }
   }
 </script>
-
-<style scoped>
-  .line {
-    text-align: center;
-  }
-</style>
-
