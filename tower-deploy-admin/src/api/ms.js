@@ -22,3 +22,10 @@ export function edit(params) {
     data: params
   })
 }
+
+export function getVersions(name) {
+  return request2({
+    url: '/api/ms/getVersions/?name=' + name,
+    method: 'get'
+  })
+}

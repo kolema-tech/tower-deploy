@@ -23,50 +23,75 @@
           {{scope.row.configs}}
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="160">
+      <el-table-column label="操作" width="250">
         <template slot-scope="scope">
           <el-button
             size="mini"
-            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            @click="handleViewVersions(scope.$index,scope.row)">查看版本
+          </el-button>
+          <el-button
+            size="mini"
+            @click="handleEdit(scope.$index, scope.row)">编辑
+          </el-button>
           <el-button
             size="mini"
             type="danger"
-            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            @click="handleDelete(scope.$index, scope.row)">删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
+
+    <el-dialog title="版本詳細" :visible.sync="dialogTableVisible" width="50%">
+      <el-table :data="versions">
+        <el-table-column property="version" label="版本" width="200"></el-table-column>
+        <el-table-column property="commitTime" label="提交時間" width="200"></el-table-column>
+        <el-table-column property="fullMessage" label="消息" width="100"></el-table-column>
+      </el-table>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
-  import {getAllList} from '@/api/ms'
+  import {getAllList, getVersions} from '@/api/ms'
 
   export default {
     data() {
       return {
         list: null,
-        listLoading: true
+        listLoading: true,
+        dialogTableVisible: false,
+        dialogFormVisible: false,
+        versions: []
       }
     },
-    filters: {
-    },
+    filters: {},
     created() {
       this.fetchData()
     },
     methods: {
       fetchData() {
-        this.listLoading = true
+        this.listLoading = true;
         getAllList().then(response => {
-          this.list = response.data
-          this.listLoading = false
+          this.list = response.data;
+          this.listLoading = false;
         })
       },
       goto(page) {
         this.$router.push(page);
       },
+      handleViewVersions(index, row) {
+
+        this.dialogTableVisible = true;
+        console.log(getVersions);
+        getVersions(row.name).then(response => {
+          this.versions = response.data;
+        })
+      },
       handleEdit(index, row) {
         console.log(index, row);
-        this.$router.push({ name: 'msEdit', params: row});
+        this.$router.push({name: 'msEdit', params: row});
       },
       handleDelete(index, row) {
         console.log(index, row);

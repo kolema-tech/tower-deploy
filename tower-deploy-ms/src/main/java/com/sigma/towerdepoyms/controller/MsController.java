@@ -4,8 +4,7 @@ import com.sigma.towerdepoyms.config.DeployConfig;
 import com.sigma.towerdepoyms.request.MsRequest;
 import com.sigma.towerdepoyms.response.Response;
 import com.sigma.towerdepoyms.service.MsService;
-import com.sigma.towerdepoyms.util.git.CloneRemoteRepository;
-import com.sigma.towerdepoyms.util.git.CommitFile;
+import com.sigma.towerdepoyms.util.git.GitUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.experimental.var;
@@ -36,10 +35,7 @@ public class MsController {
     MsService msService;
 
     @Autowired
-    CloneRemoteRepository cloneRemoteRepository;
-
-    @Autowired
-    CommitFile commitFile;
+    GitUtil gitUtil;
 
     @ApiOperation(value = "創建一個微服務")
     @PostMapping(value = "/")
@@ -65,6 +61,12 @@ public class MsController {
         return new Response(20000, "查詢成功", msService.getAll());
     }
 
+    @ApiOperation(value = "查詢版本")
+    @GetMapping(value = "/getVersions")
+    public Response getVersions(@RequestParam("name") String name) {
+        return new Response(20000, "查詢成功", msService.getVersions(name));
+    }
+
     @ApiOperation(value = "上傳包")
     @PostMapping(value = "/upload/{ms}")
     public Response update(@NotBlank @PathVariable("ms") String name, @NotBlank @RequestParam("commitMessage") String commitMessage, @RequestParam("file") MultipartFile file, HttpServletRequest request) throws GitAPIException {
@@ -84,7 +86,7 @@ public class MsController {
         if (!saveFile.getParentFile().exists()) {
             saveFile.getParentFile().mkdirs();
 
-            cloneRemoteRepository.cloneRemote(name, ms.getGitUrl());
+            gitUtil.cloneRemote(name, ms.getGitUrl());
         }
 
         try {
@@ -93,7 +95,7 @@ public class MsController {
             out.flush();
             out.close();
 
-            commitFile.commitAndPush(saveFile.getParentFile(), fileName, commitMessage);
+            gitUtil.commitAndPush(saveFile.getParentFile(), fileName, commitMessage);
 
             return new Response(0, "上傳成功！");
         } catch (Exception e) {

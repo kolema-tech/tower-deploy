@@ -1,6 +1,7 @@
 package com.sigma.towerdepoyms.service;
 
 import com.sigma.towerdepoyms.entity.Ms;
+import com.sigma.towerdepoyms.entity.MsVersion;
 import com.sigma.towerdepoyms.request.MsRequest;
 
 import java.util.List;
@@ -29,6 +30,13 @@ public interface MsService {
      * @return
      */
     List<Ms> getAll();
+
+    /**
+     * 獲取版本
+     * @return
+     * @param name
+     */
+    List<MsVersion> getVersions(String name);
 
     /**
      * 根據名稱查找

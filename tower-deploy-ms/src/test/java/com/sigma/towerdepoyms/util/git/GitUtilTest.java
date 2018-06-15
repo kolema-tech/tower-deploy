@@ -7,13 +7,13 @@ import java.io.File;
 /**
  * @author zhenpeng
  */
-public class CheckoutFileTest {
+public class GitUtilTest {
 
 
     @Test
     public void rollBackPreRevision() throws Exception {
 
-        CheckoutFile checkoutFile= new CheckoutFile();
+        GitUtil checkoutFile= new GitUtil();
         checkoutFile.gitCheckout(new File("G:\\git-package\\asfasdfasdfasdf"),"2c9e3ec3");
     }
 }

@@ -6,7 +6,7 @@ import com.sigma.towerdepoyms.entity.NginxoutConfig;
 import com.sigma.towerdepoyms.response.Response;
 import com.sigma.towerdepoyms.service.MsService;
 import com.sigma.towerdepoyms.service.RoleService;
-import com.sigma.towerdepoyms.util.git.CheckoutFile;
+import com.sigma.towerdepoyms.util.git.GitUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.experimental.var;
@@ -31,13 +31,13 @@ public class DeployController {
     DeployConfig deployConfig;
 
     @Autowired
-    CheckoutFile checkoutFile;
-
-    @Autowired
     MsService msService;
 
     @Autowired
     RoleService roleService;
+
+    @Autowired
+    GitUtil gitUtil;
 
     @ApiOperation(value = "執行部署")
     @PostMapping(value = "/{ms}/{version}")
@@ -61,7 +61,7 @@ public class DeployController {
         }
 
         //check out the version
-        checkoutFile.gitCheckout(new File(deployConfig.getGitPath(), name), version);
+        gitUtil.gitCheckout(new File(deployConfig.getGitPath(), name), version);
 
         //nginx-out
         var nginxConfig = new NginxoutConfig();

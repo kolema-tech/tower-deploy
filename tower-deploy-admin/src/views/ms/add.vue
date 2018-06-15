@@ -34,7 +34,8 @@
     },
     methods: {
       onSubmit() {
-        this.$message('submit!')
+        this.$message('submit!');
+        this.form.configs = null;
         add(this.form).then(response => {
           this.list = response.data
           if (response.code == 20000) {
