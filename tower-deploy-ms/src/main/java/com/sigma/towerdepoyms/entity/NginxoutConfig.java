@@ -13,7 +13,18 @@ import java.util.List;
 @Setter
 @ToString
 public class NginxoutConfig {
+    /**
+     * 服務名稱
+     */
     private String ms;
+
+    /**
+     * upstream的目錄
+     */
     private String upstream_dir;
+
+    /**
+     * upstream的配置
+     */
     private List<String> upstreams;
 }
