@@ -72,12 +72,6 @@ export const constantRouterMap = [
         meta: {title: '上傳服務包', icon: 'upload'}
       },
       {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: {title: 'Table', icon: 'table'}
-      },
-      {
         path: 'tree',
         name: 'Tree',
         component: () => import('@/views/tree/index'),
@@ -87,14 +81,14 @@ export const constantRouterMap = [
   },
 
   {
-    path: '/node',
+    path: '/deploy',
     component: Layout,
     children: [
       {
         path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: {title: 'Form', icon: 'form'}
+        name: '部署',
+        component: () => import('@/views/deploy/index'),
+        meta: {title: '部署', icon: 'deploy'}
       }
     ]
   },
