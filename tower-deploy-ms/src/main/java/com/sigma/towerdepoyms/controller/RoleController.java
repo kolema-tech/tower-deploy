@@ -1,5 +1,6 @@
 package com.sigma.towerdepoyms.controller;
 
+import com.sigma.towerdepoyms.config.DeployConfig;
 import com.sigma.towerdepoyms.entity.CopyConfig;
 import com.sigma.towerdepoyms.entity.EurekaoutConfig;
 import com.sigma.towerdepoyms.entity.NginxoutConfig;
@@ -10,7 +11,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.experimental.var;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -35,8 +35,9 @@ public class RoleController {
 
     @Autowired
     RoleService roleService;
-    @Value("${ansible.path}")
-    private String ansiblePath;
+
+    @Autowired
+    private DeployConfig deployConfig;
 
     public static void callScript(String shellDir, String shellFile) {
         ProcessBuilder pb = new ProcessBuilder("./" + shellFile);
@@ -72,7 +73,7 @@ public class RoleController {
 
         roleService.nginxout(config);
 
-        callScript(ansiblePath, new File(ansiblePath, "nginx-out.sh").getAbsolutePath());
+        callScript(deployConfig.getAnsiblePath(), new File(deployConfig.getAnsiblePath(), "nginx-out.sh").getAbsolutePath());
 
         return Response.success();
     }
@@ -83,7 +84,7 @@ public class RoleController {
 
         //執行 nginx-out.sh
 
-        File varFile = new File(ansiblePath, "ansible/roles/eureka-out/vars/main.yml");
+        File varFile = new File(deployConfig.getAnsiblePath(), "ansible/roles/eureka-out/vars/main.yml");
 
         Yaml yaml = new Yaml();
 
@@ -96,7 +97,7 @@ public class RoleController {
 
         Files.write(Paths.get(varFile.getAbsolutePath()), str.getBytes());
 
-        callScript(ansiblePath, new File(ansiblePath, "eureka-out.sh").getAbsolutePath());
+        callScript(deployConfig.getAnsiblePath(), new File(deployConfig.getAnsiblePath(), "eureka-out.sh").getAbsolutePath());
 
         return Response.success();
     }
@@ -111,8 +112,28 @@ public class RoleController {
 
         roleService.copy(config);
 
-        callScript(ansiblePath, new File(ansiblePath, "copy-file.sh").getAbsolutePath());
+        callScript(deployConfig.getAnsiblePath(), new File(deployConfig.getAnsiblePath(), "copy-file.sh").getAbsolutePath());
 
         return Response.success();
+    }
+
+    @ApiOperation(value = "查詢版本")
+    @GetMapping(value = "/getRoleTree")
+    public Response getRoleTree() {
+
+        File file = new File(deployConfig.getAnsiblePath());
+
+        return new Response(20000, "查詢成功", null);
+    }
+
+    private void travelFile(File file) {
+        for (File file1 : file.listFiles()) {
+            if (file1.isDirectory()) {
+                System.out.println(file1.getAbsolutePath());
+                travelFile(file1);
+            } else {
+                System.out.println(file1.getAbsolutePath());
+            }
+        }
     }
 }

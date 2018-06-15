@@ -40,7 +40,7 @@ export const constantRouterMap = [
   {
     path: '/tower',
     component: Layout,
-    redirect: '/tower/table',
+    redirect: '/tower/ms',
     name: 'Tower',
     meta: {title: 'Tower', icon: 'example'},
     children: [
@@ -70,12 +70,22 @@ export const constantRouterMap = [
         hidden: true,
         component: () => import('@/views/ms/upload'),
         meta: {title: '上傳服務包', icon: 'upload'}
-      },
+      }
+    ]
+  },
+
+  {
+    path: '/role',
+    component: Layout,
+    redirect: 'nginx',
+    name: '角色',
+    meta: {title: 'Role', icon: 'example'},
+    children: [
       {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: {title: 'Tree', icon: 'tree'}
+        path: 'nginx',
+        name: 'nginx',
+        component: () => import('@/views/role/index'),
+        meta: {title: 'nginx-role', icon: 'table'}
       }
     ]
   },
