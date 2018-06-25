@@ -4,6 +4,7 @@ import com.sigma.towerdepoyms.config.DeployConfig;
 import com.sigma.towerdepoyms.entity.CopyConfig;
 import com.sigma.towerdepoyms.entity.EurekaoutConfig;
 import com.sigma.towerdepoyms.entity.NginxoutConfig;
+import com.sigma.towerdepoyms.entity.RoleTree;
 import com.sigma.towerdepoyms.response.Response;
 import com.sigma.towerdepoyms.service.RoleService;
 import io.swagger.annotations.Api;
@@ -16,11 +17,10 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.nodes.Tag;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -123,16 +123,56 @@ public class RoleController {
 
         File file = new File(deployConfig.getAnsiblePath());
 
-        return new Response(20000, "查詢成功", null);
+        RoleTree roleTree = new RoleTree();
+        travelFile(file, "", roleTree);
+
+
+        return new Response(20000, "查詢成功", roleTree);
     }
 
-    private void travelFile(File file) {
+    @ApiOperation(value = "查詢版本")
+    @GetMapping(value = "/getRoleContent")
+    public Response getRoleFile(@RequestParam("file") String file) throws IOException {
+
+        var list = Files.readAllLines(Paths.get(deployConfig.getAnsiblePath(), file));
+
+        StringBuilder sb = new StringBuilder();
+
+        list.forEach(zw -> {
+            sb.append(System.lineSeparator() + zw);
+        });
+
+        return new Response(20000, "查詢成功", sb.toString());
+    }
+
+    /**
+     * 遍歷樹
+     *
+     * @param file 文件
+     * @param root 根
+     */
+    private void travelFile(File file, String parent, RoleTree root) {
+
+        root.setParent(parent);
+        root.setIsLeaf(false);
+        root.setLabel(file.getName());
+        if (root.getChildren() == null) {
+            root.setChildren(new ArrayList<>());
+        }
+
         for (File file1 : file.listFiles()) {
+            //是目錄
+            RoleTree roleTree = new RoleTree();
+            roleTree.setLabel(file1.getName());
+            roleTree.setParent(parent);
+
             if (file1.isDirectory()) {
-                System.out.println(file1.getAbsolutePath());
-                travelFile(file1);
+                roleTree.setIsLeaf(false);
+                root.getChildren().add(roleTree);
+                travelFile(file1, parent + "/" + file1.getName(), roleTree);
             } else {
-                System.out.println(file1.getAbsolutePath());
+                roleTree.setIsLeaf(true);
+                root.getChildren().add(roleTree);
             }
         }
     }

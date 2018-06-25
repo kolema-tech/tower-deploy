@@ -21,7 +21,7 @@ public class RoleTree {
     /**
      * id
      */
-    private String id;
+    private String parent;
 
     /**
      * label

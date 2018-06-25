@@ -2,58 +2,74 @@
   <div class="app-container">
     <el-input placeholder="Filter keyword" v-model="filterText" style="margin-bottom:30px;"></el-input>
 
-    <el-tree class="filter-tree" :data="data2"
-             :props="defaultProps"
-             default-expand-all
-             :filter-node-method="filterNode"
-             ref="tree2">
+    <el-container>
+      <el-aside width="200px">
+        <el-tree class="filter-tree"
+                 :data="treeData"
+                 :props="defaultProps"
+                 node-key="parent"
+                 default-expand-all
+                 :filter-node-method="filterNode"
+                 @node-click="nodeClick"
+                 ref="tree1">
 
-    </el-tree>
+        </el-tree>
+      </el-aside>
+      <el-main>
+        <el-form ref="form" :model="form">
+          <el-form-item label="文本內容">
+            <el-input type="textarea" v-model="form.text"></el-input>
+          </el-form-item>
+        </el-form>
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit">保存</el-button>
+        </el-form-item>
+      </el-main>
+    </el-container>
 
   </div>
 </template>
 
 <script>
+  import {getRoleContent, getRoles} from '@/api/role'
+
   export default {
+    created() {
+      getRoles().then(response => {
+        this.treeData = [];
+        this.treeData.push(response.data);
+      })
+    },
     watch: {
       filterText(val) {
-        this.$refs.tree2.filter(val)
+        this.$refs.tree1.filter(val)
       }
     },
 
     methods: {
       filterNode(value, data) {
-        if (!value) return true
-        return data.label.indexOf(value) !== -1
+        if (!value) return true;
+        return data.label.indexOf(value) !== -1;
+      },
+      nodeClick(data, node, tree) {
+        if (node.isLeaf) {
+          getRoleContent(data.parent + "/" + data.label).then(response => {
+            this.form.text = response.data;
+          });
+        }
+      },
+      onSubmit() {
+
       }
     },
 
     data() {
       return {
+        form: {
+          text: null
+        },
         filterText: '',
-        data2: [{
-          id: 1,
-          label: 'ansible',
-          children: [{
-            id: 4,
-            label: 'roles',
-            children: [{
-              id: 9,
-              label: 'Level three 1-1-1',
-              children: null
-            }, {
-              id: 10,
-              label: 'Level three 1-1-2',
-              children: null
-            }]
-          }]
-        }, {
-          id: 9,
-          label: 'copy-file.inv'
-        }, {
-          id: 10,
-          label: 'copy-file.inv'
-        }],
+        treeData: [],
         defaultProps: {
           children: 'children',
           label: 'label'
